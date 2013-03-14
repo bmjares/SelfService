@@ -19,6 +19,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+import play.modules.mongodb.jackson.MongoDB;
+import net.vz.mongodb.jackson.DBCursor;
+import net.vz.mongodb.jackson.JacksonDBCollection;
+import net.vz.mongodb.jackson.WriteResult;
+import net.vz.mongodb.jackson.DBQuery;
+
 /**
  * @author wsargent
  * @since 5/15/12
@@ -56,6 +62,8 @@ public class Token extends Model {
     @Formats.NonEmpty
     public String email;
 
+    public static JacksonDBCollection<Token, String> coll = MongoDB.getCollection("tasks", Token.class, String.class);
+    
     // -- Queries
     @SuppressWarnings("unchecked")
     public static Model.Finder<String, Token> find = new Finder(String.class, Token.class);
@@ -68,6 +76,13 @@ public class Token extends Model {
      * @return a resetToken
      */
     public static Token findByTokenAndType(String token, TypeToken type) {
+    	DBCursor<Token> cursor = coll.find().is("type", type).is("token", token);
+    	if (cursor.hasNext()) {
+    		Token foundToken = cursor.next();
+    		Logger.info(foundToken.token.toString());
+    	} else {
+    		Logger.info("no token found");
+    	}
         return find.where().eq("token", token).eq("type", type).findUnique();
     }
 
@@ -102,6 +117,7 @@ public class Token extends Model {
         token.type = type;
         token.email = email;
         token.save();
+        Token.coll.save(token);
         return token;
     }
 

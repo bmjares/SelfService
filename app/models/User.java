@@ -5,6 +5,7 @@ import models.utils.Hash;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import play.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,14 +62,27 @@ public class User extends Model {
      * @return a user
      */
     public static User findByEmail(String email) {
+    	DBCursor<User> cursor = coll.find(DBQuery.is("email", email));
+    	if (cursor.hasNext()) {
+    		User foundUser = cursor.next();
+    		Logger.info(foundUser.email.toString());
+    	} else {
+    		Logger.info("no user found");
+    	}
         return find.where().eq("email", email).findUnique();
     }
     
     //mongo method
     public static User mfindByEmail(String email) {
     	DBCursor<User> cursor = coll.find(DBQuery.is("email", email));
-    	User foundUser = cursor.next();
-    	return foundUser;
+    	if (cursor.hasNext()) {
+    		User foundUser = cursor.next();
+    		Logger.info(foundUser.email.toString());
+    		return foundUser;
+    	} else {
+    		Logger.info("no user found");
+    		return null;
+    	}
     }
 
     /**
@@ -78,6 +92,13 @@ public class User extends Model {
      * @return a user
      */
     public static User findByFullname(String fullname) {
+    	DBCursor<User> cursor = coll.find(DBQuery.is("fullname", fullname));
+    	if (cursor.hasNext()) {
+    		User foundUser = cursor.next();
+        	Logger.info(foundUser.fullname.toString());
+    	} else {
+    		Logger.info("no user found");
+    	}
         return find.where().eq("fullname", fullname).findUnique();
     }
 
@@ -88,6 +109,13 @@ public class User extends Model {
      * @return a user if the confirmation token is found, null otherwise.
      */
     public static User findByConfirmationToken(String token) {
+    	DBCursor<User> cursor = coll.find(DBQuery.is("confirmationToken", token));
+    	if (cursor.hasNext()) {
+    		User foundUser = cursor.next();
+    		Logger.info(foundUser.confirmationToken.toString());
+    	} else {
+    		Logger.info("no user found");
+    	}
         return find.where().eq("confirmationToken", token).findUnique();
     }
 
@@ -115,7 +143,13 @@ public class User extends Model {
      * @throws AppException App Exception
      */
     public static User authenticate(String email, String clearPassword) throws AppException {
-
+    	DBCursor<User> cursor = coll.find(DBQuery.is("email", email));
+    	if (cursor.hasNext()) {
+    		User foundUser = cursor.next();
+    		Logger.info(foundUser.email.toString());
+    	} else {
+    		Logger.info("no user found");
+    	}
         // get the user with email only to keep the salt password
         User user = find.where().eq("email", email).findUnique();
         if (user != null) {
@@ -142,7 +176,6 @@ public class User extends Model {
         if (user == null) {
           return false;
         }
-
         user.confirmationToken = null;
         user.validated = true;
         user.save();

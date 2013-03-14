@@ -6,7 +6,7 @@ object ApplicationBuild extends Build {
 
     import Tasks._
 
-    val appName         = "Play20StartApp"
+    val appName         = "SelfService"
     val appVersion      = "1.2"
 
     val appDependencies = Seq(
