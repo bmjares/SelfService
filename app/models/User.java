@@ -13,9 +13,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 import play.modules.mongodb.jackson.MongoDB;
-import net.vz.mongodb.jackson.DBCursor;
 import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.WriteResult;
 import net.vz.mongodb.jackson.DBQuery;
 
 /**
@@ -50,10 +48,11 @@ public class User extends Model {
     @Formats.NonEmpty
     public Boolean validated = false;
 
-    public static JacksonDBCollection<User, Long> coll = MongoDB.getCollection("users", User.class, Long.class);
-    
     // -- Queries (long id, user.class)
-    public static Model.Finder<Long, User> find = new Model.Finder<Long, User>(Long.class, User.class);
+    //public static JacksonDBCollection<User, Long> coll = MongoDB.getCollection("users", User.class, Long.class);
+    private static JacksonDBCollection<User, Long> db() {
+        return MongoDB.getCollection("users", User.class, Long.class);
+    }
 
     /**
      * Retrieve a user from an email.
@@ -61,28 +60,10 @@ public class User extends Model {
      * @param email email to search
      * @return a user
      */
-    public static User findByEmail(String email) {
-    	DBCursor<User> cursor = coll.find(DBQuery.is("email", email));
-    	if (cursor.hasNext()) {
-    		User foundUser = cursor.next();
-    		Logger.info(foundUser.email.toString());
-    	} else {
-    		Logger.info("no user found");
-    	}
-        return find.where().eq("email", email).findUnique();
-    }
     
     //mongo method
-    public static User mfindByEmail(String email) {
-    	DBCursor<User> cursor = coll.find(DBQuery.is("email", email));
-    	if (cursor.hasNext()) {
-    		User foundUser = cursor.next();
-    		Logger.info(foundUser.email.toString());
-    		return foundUser;
-    	} else {
-    		Logger.info("no user found");
-    		return null;
-    	}
+    public static User findByEmail(String email) {
+        return db().findOne(DBQuery.is("email", email));
     }
 
     /**
@@ -92,14 +73,7 @@ public class User extends Model {
      * @return a user
      */
     public static User findByFullname(String fullname) {
-    	DBCursor<User> cursor = coll.find(DBQuery.is("fullname", fullname));
-    	if (cursor.hasNext()) {
-    		User foundUser = cursor.next();
-        	Logger.info(foundUser.fullname.toString());
-    	} else {
-    		Logger.info("no user found");
-    	}
-        return find.where().eq("fullname", fullname).findUnique();
+        return db().findOne(DBQuery.is("fullname", fullname));
     }
 
     /**
@@ -109,30 +83,8 @@ public class User extends Model {
      * @return a user if the confirmation token is found, null otherwise.
      */
     public static User findByConfirmationToken(String token) {
-    	DBCursor<User> cursor = coll.find(DBQuery.is("confirmationToken", token));
-    	if (cursor.hasNext()) {
-    		User foundUser = cursor.next();
-    		Logger.info(foundUser.confirmationToken.toString());
-    	} else {
-    		Logger.info("no user found");
-    	}
-        return find.where().eq("confirmationToken", token).findUnique();
+        return db().findOne(DBQuery.is("token", token));
     }
-
-
-//    SAMPLE JACKSON METHODS
-//    
-//    private static JacksonDBCollection<User, String> db() {
-//    	return MongoDB.getCollection("users", User.class, String.class);
-//    }
-//
-//    public static User findById(String id) {
-//    	return db().findOneById(id);
-//    }
-//
-//    public static User findByEmail(String email) {
-//    	return db().findOne(DBQuery.is("email", email));
-//    }
     
     /**
      * Authenticate a User, from a email and clear password.
@@ -143,15 +95,7 @@ public class User extends Model {
      * @throws AppException App Exception
      */
     public static User authenticate(String email, String clearPassword) throws AppException {
-    	DBCursor<User> cursor = coll.find(DBQuery.is("email", email));
-    	if (cursor.hasNext()) {
-    		User foundUser = cursor.next();
-    		Logger.info(foundUser.email.toString());
-    	} else {
-    		Logger.info("no user found");
-    	}
-        // get the user with email only to keep the salt password
-        User user = find.where().eq("email", email).findUnique();
+    	User user = db().findOne(DBQuery.is("email", email));
         if (user != null) {
             // get the hash password from the salt + clear password
             if (Hash.checkPassword(clearPassword, user.passwordHash)) {
@@ -178,8 +122,7 @@ public class User extends Model {
         }
         user.confirmationToken = null;
         user.validated = true;
-        user.save();
-        User.coll.save(user);
+        User.db().save(user);
         return true;
     }
 

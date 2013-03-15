@@ -1,5 +1,6 @@
 package models;
 
+import models.utils.AppException;
 import models.utils.Mail;
 import play.Configuration;
 import play.Logger;
@@ -20,9 +21,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import play.modules.mongodb.jackson.MongoDB;
-import net.vz.mongodb.jackson.DBCursor;
 import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.WriteResult;
 import net.vz.mongodb.jackson.DBQuery;
 
 /**
@@ -62,11 +61,9 @@ public class Token extends Model {
     @Formats.NonEmpty
     public String email;
 
-    public static JacksonDBCollection<Token, String> coll = MongoDB.getCollection("tasks", Token.class, String.class);
-    
-    // -- Queries
-    @SuppressWarnings("unchecked")
-    public static Model.Finder<String, Token> find = new Finder(String.class, Token.class);
+    private static JacksonDBCollection<Token, String> db() {
+        return MongoDB.getCollection("tasks", Token.class, String.class);
+    }
 
     /**
      * Retrieve a token by id and type.
@@ -76,14 +73,7 @@ public class Token extends Model {
      * @return a resetToken
      */
     public static Token findByTokenAndType(String token, TypeToken type) {
-    	DBCursor<Token> cursor = coll.find().is("type", type).is("token", token);
-    	if (cursor.hasNext()) {
-    		Token foundToken = cursor.next();
-    		Logger.info(foundToken.token.toString());
-    	} else {
-    		Logger.info("no token found");
-    	}
-        return find.where().eq("token", token).eq("type", type).findUnique();
+        return db().findOne(DBQuery.and(DBQuery.is("type", type), DBQuery.is("token", token)));
     }
 
     /**
@@ -116,8 +106,7 @@ public class Token extends Model {
         token.userId = user.id;
         token.type = type;
         token.email = email;
-        token.save();
-        Token.coll.save(token);
+        Token.db().save(token);
         return token;
     }
 
