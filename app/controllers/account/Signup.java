@@ -74,7 +74,7 @@ public class Signup extends Controller {
             user.passwordHash = Hash.createPassword(register.inputPassword);
             user.confirmationToken = UUID.randomUUID().toString();
 
-            user.save();
+            User.db().save(user);
             sendMailAskForConfirmation(user);
 
             return ok(created.render());

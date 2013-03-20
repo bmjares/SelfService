@@ -48,7 +48,7 @@ public class Token extends Model {
 
     @Constraints.Required
     @Formats.NonEmpty
-    public Long userId;
+    public String userId;
 
     @Constraints.Required
     @Enumerated(EnumType.STRING)

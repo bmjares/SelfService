@@ -155,7 +155,8 @@ public class Reset extends Controller {
             }
 
             // check email
-            User user = User.find.byId(resetToken.userId);
+            play.Logger.debug("about to check email by id in reset controller");
+            User user = User.findById(resetToken.userId);
             if (user == null) {
                 // display no detail (email unknown for example) to
                 // avoir check email by foreigner

@@ -15,6 +15,7 @@ import java.util.Date;
 import play.modules.mongodb.jackson.MongoDB;
 import net.vz.mongodb.jackson.JacksonDBCollection;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.ObjectId;
 
 /**
  * User: yesnault
@@ -23,8 +24,8 @@ import net.vz.mongodb.jackson.DBQuery;
 @Entity
 public class User extends Model {
 
-    @Id
-    public Long id;
+	@ObjectId @Id
+    public String id;
 
     @Constraints.Required
     @Formats.NonEmpty
@@ -48,10 +49,9 @@ public class User extends Model {
     @Formats.NonEmpty
     public Boolean validated = false;
 
-    // -- Queries (long id, user.class)
-    //public static JacksonDBCollection<User, Long> coll = MongoDB.getCollection("users", User.class, Long.class);
-    private static JacksonDBCollection<User, Long> db() {
-        return MongoDB.getCollection("users", User.class, Long.class);
+    //@TODO possibly should not be public
+    public static JacksonDBCollection<User, Object> db() {
+        return MongoDB.getCollection("users", User.class, Object.class);
     }
 
     /**
@@ -61,9 +61,14 @@ public class User extends Model {
      * @return a user
      */
     
-    //mongo method
+    public static User findById(String id) {
+    	Logger.debug("findbyid in model user");
+        return db().findOne(DBQuery.is("id", id));
+    }
+    
     public static User findByEmail(String email) {
-        return db().findOne(DBQuery.is("email", email));
+    	Logger.debug("findbyemail in model user");
+    	return db().findOne(DBQuery.is("email", email));
     }
 
     /**
@@ -73,7 +78,8 @@ public class User extends Model {
      * @return a user
      */
     public static User findByFullname(String fullname) {
-        return db().findOne(DBQuery.is("fullname", fullname));
+    	Logger.debug("findbyfullname in model user");
+    	return db().findOne(DBQuery.is("fullname", fullname));
     }
 
     /**
@@ -83,7 +89,8 @@ public class User extends Model {
      * @return a user if the confirmation token is found, null otherwise.
      */
     public static User findByConfirmationToken(String token) {
-        return db().findOne(DBQuery.is("token", token));
+    	Logger.debug("findbyconfirmationtoken in model user");
+    	return db().findOne(DBQuery.is("token", token));
     }
     
     /**
@@ -95,7 +102,8 @@ public class User extends Model {
      * @throws AppException App Exception
      */
     public static User authenticate(String email, String clearPassword) throws AppException {
-    	User user = db().findOne(DBQuery.is("email", email));
+    	Logger.debug("user authenticate in model user");
+    	User user = User.db().findOne(DBQuery.is("email", email));
         if (user != null) {
             // get the hash password from the salt + clear password
             if (Hash.checkPassword(clearPassword, user.passwordHash)) {
@@ -106,7 +114,8 @@ public class User extends Model {
     }
 
     public void changePassword(String password) throws AppException {
-        this.passwordHash = Hash.createPassword(password);
+    	Logger.debug("change password in model user");
+    	this.passwordHash = Hash.createPassword(password);
         this.save();
     }
 
@@ -117,12 +126,14 @@ public class User extends Model {
      * @throws AppException App Exception
      */
     public static boolean confirm(User user) throws AppException {
-        if (user == null) {
+    	Logger.debug("save user in model user");
+    	if (user == null) {
           return false;
         }
         user.confirmationToken = null;
         user.validated = true;
         User.db().save(user);
+
         return true;
     }
 
