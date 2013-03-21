@@ -33,3 +33,6 @@
  
 #validate user without email thru mongo shell
 > db.users.update({email : 'brandon.jahner@arestravelinc.com'},{$set: {'validated' : 'true'},})
+
+#test form post
+> curl --data "siteId=77&templateName=convis-1" http://localhost:9000/info

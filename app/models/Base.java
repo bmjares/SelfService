@@ -25,7 +25,7 @@ public class Base extends Model {
     
     @Constraints.Required
     @Formats.NonEmpty
-    public Integer siteId;
+    public String siteId;
     
     public static JacksonDBCollection<Base, Object> db() {
         return MongoDB.getCollection("bases", Base.class, Object.class);
@@ -39,5 +39,17 @@ public class Base extends Model {
     public static Base findBySiteId(String siteId) {
     	Logger.debug("findbysiteid in model base");
     	return db().findOne(DBQuery.is("siteId", siteId));
+    }
+    
+    public static boolean save(Base base) {
+    	Logger.debug("save base in model base");
+    	Logger.debug(base.templateName);
+    	if (base == null) {
+          return false;
+        }
+    	//@TODO check for unique template name, 
+    	//if not unique, get _id and update, otherwise save will insert
+    	Base.db().save(base);
+    	return true;
     }
 }
