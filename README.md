@@ -1,4 +1,5 @@
 # Based off of Play20StartApp
+# using this angular module: https://github.com/codef0rmer/angular-dragdrop
 
 # Configuration notes
 * Must change java build path in project properties to prevent data binding error JSR-303

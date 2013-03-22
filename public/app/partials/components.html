@@ -1,0 +1,47 @@
+   <fieldset ng-controller="ComponentCtrl">
+     <div id="legend" class="">
+       <legend class="">Create Component</legend>
+     </div>
+   <div class="control-group">
+
+         <!-- Select Basic -->
+         <label class="control-label">Size</label>
+         <div class="controls">
+           <select class="input-xlarge" ng-model="size">
+             <option>1/3</option>
+             <option>2/3</option>
+             <option>Full</option>
+           </select>
+         </div>
+
+       </div>
+
+   <div class="control-group">
+
+         <!-- Select Basic -->
+         <label class="control-label">Type</label>
+         <div class="controls">
+           <select class="input-xlarge" ng-model="type">
+             <option>Image</option>
+             <option>Widget</option>
+             <option>Text</option>
+           </select>
+         </div>
+
+       </div>
+       
+        <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success" ng-click="create()">Create</button>
+          </div>
+        </div>
+	
+   </fieldset>
+   	<!-- droppable -->
+	<div ng-controller="dragdropCtrl">
+		<div class="componentContainer control-group btn btn-droppable" data-drop="true" ng-model="header" jqyoui-droppable="{multiple:true}" data-jqyoui-options="optionsHeader">
+		
+			
+			
+		</div>
+	</div>
