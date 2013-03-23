@@ -6,7 +6,6 @@ app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.
 	      when('/products', {templateUrl: 'assets/app/partials/product-list.html',   controller: ProductListCtrl}).
 	      when('/info', {templateUrl: 'assets/app/partials/base-info.html', controller: BaseInfoCtrl}).
-	      when('/test', {templateUrl: 'assets/app/partials/test-droppable.html', controller: BaseInfoCtrl}).
 	      when('/header/:siteId', {templateUrl: 'assets/app/partials/components.html', controller: ComponentCtrl}).
 	      when('/products/:productId', {templateUrl: 'assets/app/partials/product-detail.html', controller: ProductDetailCtrl}).
 	      otherwise({redirectTo: '/products'});
@@ -15,15 +14,15 @@ app.config(['$routeProvider', function($routeProvider) {
 
 
 //START ANGULAR DRAGDROP
-app.controller('oneCtrl', function($scope, $timeout) {
-    $scope.list1 = [];
+app.controller('dragdropCtrl', function($scope, $timeout) {
+    $scope.header = [];
     $scope.list2 = [];
     $scope.list3 = [];
     $scope.list4 = [];
     
     $scope.list5 = [
-      { 'title': 'Item 1', 'drag': true },
-      { 'title': 'Item 2', 'drag': true },
+      { 'title': 'Widget', 'drag': true },
+      { 'title': 'Image', 'drag': true },
       { 'title': 'Item 3', 'drag': true },
       { 'title': 'Item 4', 'drag': true },
       { 'title': 'Item 5', 'drag': true },
@@ -33,78 +32,20 @@ app.controller('oneCtrl', function($scope, $timeout) {
     ];
 
     // Limit items to be dropped in list1
-    $scope.optionsList1 = {
+    $scope.optionsHeader = {
       accept: function(dragEl) {
-        if ($scope.list1.length >= 2) {
+        if ($scope.header.length >= 2) {
+        	console.log($scope.header.length);
           return false;
         } else {
+        	console.log($scope.header.length);
           return true;
         }
       }
     };
     
-      $scope.startCallback = function(event, ui) {
-        console.log('You started draggin');
-	  };
-	
-	  $scope.stopCallback = function(event, ui) {
-	    console.log('Why did you stop draggin me?');
-	  };
-	
-	  $scope.dragCallback = function(event, ui) {
-	    console.log('hey, look I`m flying');
-	  };
-	
-	  $scope.dropCallback = function(event, ui) {
-	    console.log('hey, you dumped me :-(');
-	  };
-	
-	  $scope.overCallback = function(event, ui) {
-	    console.log('Look, I`m over you');
-	  };
-	
-	  $scope.outCallback = function(event, ui) {
-	    console.log('I`m not, hehe');
-	  };
   });
 
-
-
-app.controller('test', function($scope, $timeout) {
-	  $scope.list1 = [{'title': 'Lolcat Shirt'},{'title': 'Cheezeburger Shirt'},{'title': 'Buckit Shirt'}];
-	  $scope.list2 = [{'title': 'Zebra Striped'},{'title': 'Black Leather'},{'title': 'Alligator Leather'}];
-	  $scope.list3 = [{'title': 'iPhone'},{'title': 'iPod'},{'title': 'iPad'}];
-
-	  $scope.list4 = [];
-
-	  $scope.hideMe = function() {
-	    return $scope.list4.length > 0;
-	  }
-	  $scope.startCallback = function(event, ui) {
-		    console.log('You started draggin');
-	  };
-
-	  $scope.stopCallback = function(event, ui) {
-	    console.log('Why did you stop draggin me?');
-	  };
-
-	  $scope.dragCallback = function(event, ui) {
-	    console.log('hey, look I`m flying');
-	  };
-
-	  $scope.dropCallback = function(event, ui) {
-	    console.log('hey, you dumped me :-(');
-	  };
-
-	  $scope.overCallback = function(event, ui) {
-	    console.log('Look, I`m over you');
-	  };
-
-	  $scope.outCallback = function(event, ui) {
-	    console.log('I`m not, hehe');
-	  };
-	  
-	});
 //END ANGULAR DRAGDROP
 
 
