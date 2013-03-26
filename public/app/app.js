@@ -15,36 +15,33 @@ app.config(['$routeProvider', function($routeProvider) {
 
 //START ANGULAR DRAGDROP
 app.controller('dragdropCtrl', function($scope, $timeout) {
-    $scope.header = [];
-    $scope.list2 = [];
-    $scope.list3 = [];
-    $scope.list4 = [];
-    
-    $scope.list5 = [
-      { 'title': 'Widget', 'drag': true },
-      { 'title': 'Image', 'drag': true },
-      { 'title': 'Item 3', 'drag': true },
-      { 'title': 'Item 4', 'drag': true },
-      { 'title': 'Item 5', 'drag': true },
-      { 'title': 'Item 6', 'drag': true },
-      { 'title': 'Item 7', 'drag': true },
-      { 'title': 'Item 8', 'drag': true }
-    ];
+	  $scope.components = [{'class': 'componentWdgt'},{'class': 'componentImg'},{'class': 'componentTxt'}];
 
-    // Limit items to be dropped in list1
-    $scope.optionsHeader = {
-      accept: function(dragEl) {
-        if ($scope.header.length >= 2) {
-        	console.log($scope.header.length);
-          return false;
-        } else {
-        	console.log($scope.header.length);
-          return true;
-        }
-      }
-    };
-    
-  });
+	  $scope.header = [];
+
+	  $scope.hideMe = function() {
+	    return $scope.header.length > 0;
+	  }
+	  
+		// Limit items to be dropped in list1
+		$scope.optionsHeader = {
+		  accept: function(dragEl) {
+		    if ($scope.header.length >= 2) {
+		    	console.log($scope.header.length);
+		      return false;
+		    } else {
+		    	console.log($scope.header.length);
+		      return true;
+		    }
+		  }
+		};
+		
+	  $scope.dropCallback = function(event, ui) {
+		  $scope.components.push({'class': ui.helper.context.className});
+	  };
+
+
+});
 
 //END ANGULAR DRAGDROP
 
