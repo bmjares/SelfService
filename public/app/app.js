@@ -2,6 +2,7 @@
 
 var app = angular.module('SelfService', ['ngDragDrop']);
 
+//START ROUTING CONFIGURATION
 app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.
 	      when('/products', {templateUrl: 'assets/app/partials/product-list.html',   controller: ProductListCtrl}).
@@ -10,7 +11,7 @@ app.config(['$routeProvider', function($routeProvider) {
 	      when('/products/:productId', {templateUrl: 'assets/app/partials/product-detail.html', controller: ProductDetailCtrl}).
 	      otherwise({redirectTo: '/products'});
 	}]);
-
+//END ROUTING CONFIGURATION
 
 
 //START ANGULAR DRAGDROP
@@ -37,15 +38,13 @@ app.controller('dragdropCtrl', function($scope, $timeout) {
 		};
 		
 	  $scope.dropCallback = function(event, ui) {
+		  //ui.draggable[0].className
 		  $scope.components.push({'class': ui.helper.context.className});
 	  };
 
 
 });
-
 //END ANGULAR DRAGDROP
-
-
 
 
 //START CONTROLLERS
@@ -83,3 +82,16 @@ function ProductListCtrl($scope) {
 		  
 		}
 //END CONTROLLERS
+	
+	
+//START CUSTOM DIRECTIVES
+app.directive('dropZones', function() {
+	  return {
+	    restrict: 'E',
+	    templateUrl : 'assets/app/partials/drop-container.html',
+	    transclude : true
+	  };
+	});
+	
+	
+//END CUSTOM DIRECTIVES
