@@ -27,11 +27,11 @@ app.controller('dragdropCtrl', function($scope, $timeout) {
 		// Limit items to be dropped in list1
 		$scope.optionsHeader = {
 		  accept: function(dragEl) {
-		    if ($scope.header.length >= 2) {
-		    	console.log($scope.header.length);
+		    if ($scope.header.length >= 3) {
+		    	//console.log($scope.header.length);
 		      return false;
 		    } else {
-		    	console.log($scope.header.length);
+		    	//console.log($scope.header.length);
 		      return true;
 		    }
 		  }

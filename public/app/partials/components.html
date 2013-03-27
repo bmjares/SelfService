@@ -4,11 +4,11 @@
 	  <div id="catalog">
 	    <div data-drop="true" ng-model='components' jqyoui-droppable="{multiple:true}">
 	      <div>
-			<span ng-repeat='item in components' data-drag="true" ng-class="{{item.class}}" ng-show="true" ng-model="components" class="{{item.class}}" jqyoui-draggable="{index: {{$index}}}"></span>
+			<span ng-repeat='item in components' data-drag="true" ng-class="{{item.class}}" ng-show="true" ng-model="components" class="{{item.class}}" jqyoui-draggable="{index: {{$index}}}" data-jqyoui-options="{revert: 'invalid'}"></span>
 	      </div>
 	    </div>
 	  </div>
 	</div> 
-	<drop-zones></drop-zones>
+	<data-drop-zones></data-drop-zones>
 	<a href="#" class="btn btn-success btn-small flR m5"><i class="icon-white icon-plus-sign"></i> Add Header</a>
 </div>
