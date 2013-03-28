@@ -5,11 +5,9 @@ var app = angular.module('SelfService', ['ngDragDrop']);
 //START ROUTING CONFIGURATION
 app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.
-	      when('/products', {templateUrl: 'assets/app/partials/product-list.html',   controller: ProductListCtrl}).
 	      when('/info', {templateUrl: 'assets/app/partials/base-info.html', controller: BaseInfoCtrl}).
 	      when('/header/:siteId', {templateUrl: 'assets/app/partials/components.html', controller: ComponentCtrl}).
-	      when('/products/:productId', {templateUrl: 'assets/app/partials/product-detail.html', controller: ProductDetailCtrl}).
-	      otherwise({redirectTo: '/products'});
+	      otherwise({redirectTo: '/info'});
 	}]);
 //END ROUTING CONFIGURATION
 
@@ -90,37 +88,24 @@ app.directive('pop', function() {
 //END CUSTOM DIRECTIVES
 
 //START CONTROLLERS
-function ProductListCtrl($scope) {
-	  $scope.products = [
-	    {"name": "hotel1",
-	     "snippet": "Hotel Tier 1"},
-	    {"name": "package1",
-	     "snippet": "Package Tier 1"}
-	  ];
+function BaseInfoCtrl($scope, $http) {
+	$scope.url = '/info'; // The url of our search
+	$scope.save = function() {
+		$http.post($scope.url, { 
+			"siteId" : $scope.siteId,
+			"templateName" : $scope.templateName
+			}).
+	      success(function(data){
+	          $scope.success = true;
+	          $scope.msg = {};
+	        }).
+	        error(function(data){
+	          $scope.httpError = true;
+	        });
 	}
+}
 
-	function BaseInfoCtrl($scope, $http) {
-		$scope.url = '/info'; // The url of our search
-		$scope.save = function() {
-			$http.post($scope.url, { 
-				"siteId" : $scope.siteId,
-				"templateName" : $scope.templateName
-				}).
-		      success(function(data){
-		          $scope.success = true;
-		          $scope.msg = {};
-		        }).
-		        error(function(data){
-		          $scope.httpError = true;
-		        });
-		}
-	}
-
-	function ProductDetailCtrl($scope, $routeParams) {
-		  $scope.productId = $routeParams.productId;
-		}
-
-	function ComponentCtrl($scope) {
-		  
-		}
+function ComponentCtrl($scope) {
+	  
+}
 //END CONTROLLERS
