@@ -1,6 +1,9 @@
-<div ng-controller="dragdropCtrl">
-	<div id="products">
-	  <h1 class="ui-widget-header">Components</h1>
+<div ng-controller="dragdropCtrl" id="dragdropContainer">
+	<fieldset>
+		<a href="javascript:void(0)" add-container class="{{drop.class}} btn btn-success btn-small flR m5" ng-repeat="drop in drops"><i class="icon-white icon-plus-sign"></i> Add {{drop.name}}</a>
+	</fieldset>
+	<section id="products">
+	  <h3 class="ui-widget-header">Components</h3>
 	  <div id="catalog">
 	    <div data-drop="true" ng-model='components' jqyoui-droppable="{multiple:true}">
 	      <div>
@@ -8,7 +11,6 @@
 	      </div>
 	    </div>
 	  </div>
-	</div> 
-	<data-drop-zones></data-drop-zones>
-	<a href="#" class="btn btn-success btn-small flR m5"><i class="icon-white icon-plus-sign"></i> Add Header</a>
+	</section> 
+	<div drop-zones></div>
 </div>

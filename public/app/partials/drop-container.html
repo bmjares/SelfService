@@ -1,9 +1,9 @@
-<div ng-transclude>
-<h1 class="ui-widget-header">Header</h1>
+<section ng-transclude>
+<h3 class="ui-widget-header">Header</h3>
 <div class="ui-widget-content">
     <div class="dropzone" data-drop="true" ng-model='header' jqyoui-droppable="{multiple:true, onDrop: 'dropCallback'}" data-jqyoui-options="optionsHeader">
         <span ng-repeat='item in header' data-drag="true"  ng-model="components" class="{{item.class}}" jqyoui-draggable="{index: {{$index}}}" data-jqyoui-options="{revert: 'invalid'}"></span>
         <div class="placeholder" ng-hide="hideMe()">Add your items here</div>
     </div>
 </div>
-</div>
+</section>

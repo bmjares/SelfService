@@ -15,10 +15,18 @@ app.config(['$routeProvider', function($routeProvider) {
 
 
 //START ANGULAR DRAGDROP
-app.controller('dragdropCtrl', function($scope, $timeout) {
+app.controller('dragdropCtrl', function($scope, $timeout, $compile) {
 	  $scope.components = [{'class': 'componentWdgt'},{'class': 'componentImg'},{'class': 'componentTxt'}];
 
 	  $scope.header = [];
+	  
+	  $scope.drops = [{'name':'Header','class': 'btnHeader','click':'addHeader'},
+	                  {'name':'Products','class': 'btnProduct','click':'addProduct'},
+	                  {'name':'Footer','class': 'btnFooter','click':'addFooter'}];
+	  
+	  $scope.containers = [{'name':'Header','class': 'dropHeader','option':'optionsHeader'},
+	                      {'name':'Products','class': 'dropProduct','option':'optionsProduct'},
+	                      {'name':'Footer','class': 'dropFooter','option':'optionsFooter'}];
 
 	  $scope.hideMe = function() {
 	    return $scope.header.length > 0;
@@ -41,11 +49,45 @@ app.controller('dragdropCtrl', function($scope, $timeout) {
 		  //ui.draggable[0].className
 		  $scope.components.push({'class': ui.helper.context.className});
 	  };
-
-
 });
 //END ANGULAR DRAGDROP
 
+//START CUSTOM DIRECTIVES
+app.directive('dropZones', function() {
+	  return {
+	    restrict: 'A',
+	    replace: true,
+	    templateUrl : 'assets/app/partials/drop-container.html',
+	    transclude : true
+	  };
+	});
+
+//called when add button is clicked
+app.directive('addContainer', function($compile) {
+	'use strict';
+	return {
+		//transclude : true,
+        compile: function(tElement, tAttrs) {
+            var t = '<div data-pop></div>';
+            return function(scope, iElement) {
+				iElement.bind('click', function() {
+                    $('#dragdropContainer').append($compile(t)(scope));
+                    scope.$apply()
+                });
+            };
+        }
+	};
+});
+//initiated from addContainer directive
+app.directive('pop', function() {
+    'use strict';
+    return {
+       transclude : true,
+       templateUrl: 'assets/app/partials/drop-container.html'
+    };
+});
+	
+//END CUSTOM DIRECTIVES
 
 //START CONTROLLERS
 function ProductListCtrl($scope) {
@@ -82,16 +124,3 @@ function ProductListCtrl($scope) {
 		  
 		}
 //END CONTROLLERS
-	
-	
-//START CUSTOM DIRECTIVES
-app.directive('dropZones', function() {
-	  return {
-	    restrict: 'E',
-	    templateUrl : 'assets/app/partials/drop-container.html',
-	    transclude : true
-	  };
-	});
-	
-	
-//END CUSTOM DIRECTIVES
