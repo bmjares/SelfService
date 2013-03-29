@@ -1,6 +1,25 @@
 
 
-var app = angular.module('SelfService', ['ngDragDrop']);
+var app = angular.module('SelfService', ['ngDragDrop','selfserviceFilters']);
+
+//ROOT SCOPE
+app.factory('mySharedService', function($rootScope) {
+    var sharedService = {};
+
+    sharedService.count = 0;
+
+    sharedService.prepForBroadcast = function(_count) {
+        this.count = _count;
+        this.broadcastItem();
+    };
+
+    sharedService.broadcastItem = function() {
+        $rootScope.$broadcast('handleBroadcast');
+    };
+
+    return sharedService;
+});
+//END ROOT SCOPE
 
 //START ROUTING CONFIGURATION
 app.config(['$routeProvider', function($routeProvider) {
@@ -18,13 +37,9 @@ app.controller('dragdropCtrl', function($scope, $timeout, $compile) {
 
 	  $scope.header = [];
 	  
-	  $scope.drops = [{'name':'Header','class': 'btnHeader','click':'addHeader'},
+	  $scope.buttons = [{'name':'Header','class': 'btnHeader','click':'addHeader'},
 	                  {'name':'Products','class': 'btnProduct','click':'addProduct'},
 	                  {'name':'Footer','class': 'btnFooter','click':'addFooter'}];
-	  
-	  $scope.containers = [{'name':'Header','class': 'dropHeader','option':'optionsHeader'},
-	                      {'name':'Products','class': 'dropProduct','option':'optionsProduct'},
-	                      {'name':'Footer','class': 'dropFooter','option':'optionsFooter'}];
 
 	  $scope.hideMe = function() {
 	    return $scope.header.length > 0;
@@ -47,6 +62,10 @@ app.controller('dragdropCtrl', function($scope, $timeout, $compile) {
 		  //ui.draggable[0].className
 		  $scope.components.push({'class': ui.helper.context.className});
 	  };
+	  
+	  //count for model index
+	  $scope.header.editIndex = 0;
+	  $scope.header.edit = function(i) { $scope.editIndex = i; }
 });
 //END ANGULAR DRAGDROP
 
@@ -87,9 +106,21 @@ app.directive('pop', function() {
 	
 //END CUSTOM DIRECTIVES
 
+//START FILTERS
+angular.module('selfserviceFilters', []).filter('increment', function() {
+	  return function() {
+		  var count = 0;
+		  count++;
+		  console.log(count);
+		 return $('.dropzone').attr('ng-model', ('header'+count));
+//	    return "ng-model='header'";
+	  };
+	});
+//END FILTERS
+
 //START CONTROLLERS
 function BaseInfoCtrl($scope, $http) {
-	$scope.url = '/info'; // The url of our search
+	$scope.url = '/info';
 	$scope.save = function() {
 		$http.post($scope.url, { 
 			"siteId" : $scope.siteId,
