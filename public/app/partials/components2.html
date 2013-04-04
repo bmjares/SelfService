@@ -1,0 +1,16 @@
+<div ng-controller="dragdropCtrl" id="dragdropContainer">
+	<fieldset>
+		<a ng-click="edit(i)" href="javascript:void(0)" add-container class="{{button.class}} btn btn-success btn-small flR m5" ng-repeat="button in buttons"><i class="icon-white icon-plus-sign"></i> Add {{button.name}}</a>
+	</fieldset>
+	<section id="products">
+	  <h3 class="ui-widget-header">Components</h3>
+	  <div id="catalog">
+	    <div data-drop="true" ng-model='model.components'>
+	      <div>
+			<span ng-repeat='item in model.components' data-drag="true" ng-class="{{item.class}}" class="{{item.class}}" jqyoui-draggable="{index: {{$index}}}" data-jqyoui-options="{revert: 'invalid'}"></span>
+	      </div>
+	    </div>
+	  </div>
+	</section> 
+	<drops></drops>
+</div>
