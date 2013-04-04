@@ -1,8 +1,0 @@
-<section ng-repeat='container in containers'>
-	<h3 class='ui-widget-header'>Header</h3>
-	<div class='ui-widget-content'>
-		<div class='dropzone' data-drop='true' ng-model='header' jqyoui-droppable=\"{multiple:true, onDrop: 'dropCallback'}\" data-jqyoui-options='optionsHeader'>
-			<span ng-repeat='item in container.components' data-drag='true'  ng-model='components' class=\"{{item.class}}\" jqyoui-draggable=\"{index: {{$index}}}\" data-jqyoui-options=\"{revert: 'invalid'}\"></span>
-		</div>
-	</div>
-</section>
